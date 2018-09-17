@@ -48,7 +48,36 @@ Route::get('/', function() {
 ```
 
 ## Lesson 6 - Working With the Query Builder
-
+* Laravel comes with a User table migration out of the box.
+* `php artisan make:` will generate different types of files for Laravel.
+* `php artisan make:migration create_admins_table --create=admins` will create a migration that sets up a table `admins`.
+```php
+Schema::create('admins', function (Blueprint $table) {
+	$table->increments('id');
+	$table->string('username')->unique();
+	$table->string('email')->unique();
+	$table->string('password');
+	$table->string('fname');
+	$table->string('lname');
+	$table->timestamps();
+});
+```
+* Run the migration by using `php artisan migrate`
+* Reset and re-run all migrations `php artisan migrate:refresh`
+* Example of passing database query into a route
+```php
+Route::get('/', function() {
+	$admins = DB::table('admins')->get();
+	return view('welcome', compact('tasks'));
+});
+```
+* Can also just return the query itself, and it'll cast it to `json`:
+```php
+Route::get('/', function() {
+	$admins = DB::table('admins')->get();
+	return $admins;
+});
+```
 
 ## Lesson 7 - Eloquent 101
 
