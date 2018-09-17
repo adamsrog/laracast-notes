@@ -14,7 +14,7 @@ https://laracasts.com/series/laravel-from-scratch-2017
 ```php
 Route::get('/', function() {
 	return view('welcome');
-})
+});
 ```
 * Laravel uses the Blade templating engine. Much more convenient that templating with plain PHP.
 
@@ -68,7 +68,7 @@ Schema::create('admins', function (Blueprint $table) {
 ```php
 Route::get('/', function() {
 	$admins = DB::table('admins')->get();
-	return view('welcome', compact('tasks'));
+	return view('welcome', compact('admins'));
 });
 ```
 * Can also just return the query itself, and it'll cast it to `json`:
@@ -80,13 +80,68 @@ Route::get('/', function() {
 ```
 
 ## Lesson 7 - Eloquent 101
-
+* Eloquent is Laravel's active record implementation.
+* `php artisan make:model Admin` to create a model.
+* `php artisan tinker` allows you to tinker/debug/troubleshoot from the shell.
+	* `App\Admin::all();` to get all Admin records.
+	* `App\Admin::where('id', '>', 1)->get();` to get Admins with an `id` greater than 1.
+	* `App\Admin::pluck('username')->first();` grab the first username.
+* Example passing database query into a route using a model:
+```php
+Route::get('/admins', function() {
+	$admins = App\Admin::all();
+	return view('welcome', compact('admins'));
+});
+```
+* Can add additional behavior to a model by creating functions in the model file:
+```php
+public function isComplete() {
+	return static::where('completed', 1)->get();
+}
+public function incomplete() {
+	return static::where('completed', 0)->get();
+}
+```
+* Useful to reference the namespaced model so it doesn't have to have `App\` prepended to it.
+```php
+use App\Admin;
+//...
+$admins = Admin::all();
+```
+* When creating a model, use `-m` to create a migration for it as well. `php artisan make:model Admin -m`. Can use `-c` to create a controller for it, too.
 
 ## Lesson 8 - Controllers
-
+* Controllers are the "middle-man" between a route and view. Keeps the route file cleaner, especially for big projects.
+* `php artisan make:controller AdminsController` to create a new controller.
+* In the resulting controller file, you create new methods that will be called from a route:
+```php
+public function index() {
+	$admins = Admin::all();
+	return view('admins', compact('admins'));
+}
+public function show($id) {
+	$admin = Admin::find($id);
+	return view('admin.show', compact('admin'));
+}
+```
+* Example of using in a route:
+```php
+Route::get('/admins', 'AdminsController@index');
+Route::get('/admins/{$id}', 'AdminsController@show');
+```
 
 ## Lesson 9 - Route Model Binding
-
+* Instead of specifying an `id` in the show method, you can use a model. This is route-model binding.
+* Route code is changed to:
+```php
+Route::get('/admins/{$admin}', 'AdminsController@show');
+```
+* Controller code is simplified to:
+```php
+public function show(Admin $admin) {
+	return view('admin.show', compact('admin'));
+}
+```
 
 ## Lesson 10 - Layouts and Structure
 
