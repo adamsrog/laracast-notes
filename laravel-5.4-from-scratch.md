@@ -27,3 +27,22 @@ Route::get('/', function() {
 * `.env` stores your environment variables (dev, prod, etc). Database variables belong here.
 * `php artisan migrate` will setup the database schema from the `database/migrations/` files.
 * Sequel Pro works well on OS X if you want a GUI to manage the MySQL database.
+
+## Lesson 5 - Pass Data to Your Views
+* Passing data through a route example:
+```
+Route::get('/', function() {
+	$name = 'Roger';
+	$age = 32;
+	$tasks ['task 1', 'task 2', 'task 3'];
+	return view('welcome', compact('name', 'age', 'tasks'));
+});
+```
+* Using the data in a view example:
+```
+<ul>
+	@foreach $tasks as $task
+	<li>{{ $task }}</li>
+	@endforeach
+</ul>
+```
