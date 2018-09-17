@@ -21,3 +21,9 @@ Route::get('/', function() {
 ## Lesson 3 - Laravel Valet is Your Best Friend
 * Laravel Valet is an easy way to setup a local dev server. Specifically for Mac OS X.
 * Not going to use this due to a preference for Laravel Homestead.
+
+## Lesson 4 - Database Setup and Sequel Pro
+* Laravel uses MySQL by default, but can integrate with other databases.
+* `.env` stores your environment variables (dev, prod, etc). Database variables belong here.
+* `php artisan migrate` will setup the database schema from the `database/migrations/` files.
+* Sequel Pro works well on OS X if you want a GUI to manage the MySQL database.
