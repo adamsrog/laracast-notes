@@ -11,7 +11,7 @@ https://laracasts.com/series/laravel-from-scratch-2017
 ## Lesson 2 - Basic Routing and Views
 * `php artisan serve` would boot up a basic development server to run your app in the browser.
 * Define a route that tells the your app to load the welcome view when a user goes to `/`.
-```
+```php
 Route::get('/', function() {
 	return view('welcome');
 })
@@ -30,7 +30,7 @@ Route::get('/', function() {
 
 ## Lesson 5 - Pass Data to Your Views
 * Passing data through a route example:
-```
+```php
 Route::get('/', function() {
 	$name = 'Roger';
 	$age = 32;
@@ -39,7 +39,7 @@ Route::get('/', function() {
 });
 ```
 * Using the data in a view example:
-```
+```php
 <ul>
 	@foreach $tasks as $task
 	<li>{{ $task }}</li>
