@@ -144,6 +144,15 @@ public function show(Admin $admin) {
 ```
 
 ## Lesson 10 - Layouts and Structure
+* Use layouts to avoid having to write repetitive markup for every view.
+* `@yield ('content')` in a layout will allow you to inject anything into that section.
+* `@extends ('layout')` in a view will use the layout then wrap the content in `@section ('content')` and `@endsection`.
+```php
+@section ('content')
+<h1> content! </h1>
+@endsection
+```
+* Keep things tidy by extracting specific elements into partials files and then including them: `@include ('partials.nav')`
 
 
 ## Lesson 11 - Form Request Data and CSRF
@@ -165,13 +174,23 @@ public function show(Admin $admin) {
 
 
 ## Lesson 17 - Rapid Authentication and Configuration
-
+* 'php artisan make:auth' generates the authentication scaffolding. Creates some routes, templates and layout for authentication.
+* Middleware runs for every request, i.e. CheckForMaintenanceMode. Authentication check is middleware.
 
 ## Lesson 18 - Associating With Users
-
+* `make:auth` command is something that'll almost always be ran at the beginning of a project.
+* Passwords should never be stored in clear text (obviously). Run it through something like `bcrypt()` if you're manually entering them via `tinker` or in Sequel Pro. i.e. `bcrypt('secret')`.
+* Update the migrations to contain a field that associates it with a specific `user_id`. 
+* Update the model to allow grabbing of the user it is associated with:
+```php
+public function user() {
+	return $this->belongsTo(User::class);
+}
+```
 
 ## Lesson 19 - Associating With Users: Part 2
-
+* Creating auth from scratch, generate `SessionsController` and `RegistrationController`. Creating a session would mean a new login.
+* 
 
 ## Lesson 20 - Archives
 
