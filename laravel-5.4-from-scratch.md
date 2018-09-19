@@ -154,8 +154,54 @@ public function show(Admin $admin) {
 ```
 * Keep things tidy by extracting specific elements into partials files and then including them: `@include ('partials.nav')`
 
-
 ## Lesson 11 - Form Request Data and CSRF
+* Basic structure of a resource controller:
+```
+Show all posts
+GET /posts
+
+Show create post form
+GET /posts/create
+
+Store a post
+POST /posts
+
+Show edit post form
+GET /posts/{id}/edit
+
+Show a single post
+GET /posts/{id}
+
+Submit and update to a post
+PATCH /posts/{id}
+
+Delete a post
+DELETE /posts/{id}
+```
+* `php artisan make:controller PostsControllert -r` will create a "resourceful" controller with boilerplate for the various methods.
+* Laravel protects against Cross-site Request Forgery out of the box. Automatically generates a token for every request. Obfuscates a bunch of security concerns that would otherwise have to be addressed if it weren't handled by the framework.
+* `store()` a post example:
+```php
+Post::create({
+	'title' => request('title'),
+	'body'  => request('body')
+});
+
+//... or ...
+
+Post::create(request(['title', 'body']));
+redirect('/');
+```
+* The model must have the `fillable` field to configured.
+```php
+class Post extends Model {
+	protected $fillable = ['title', 'body'];
+}
+```
+* `guarded` is the inverse of `fillable`. It'll act as a filter that prevents anything specified from being written, while allowing everything else through. Setting it an empty array would allow everything through.
+```php
+	protected $guarded = ['user_id'];
+```
 
 
 ## Lesson 12 - Form Validation 101
@@ -174,7 +220,7 @@ public function show(Admin $admin) {
 
 
 ## Lesson 17 - Rapid Authentication and Configuration
-* 'php artisan make:auth' generates the authentication scaffolding. Creates some routes, templates and layout for authentication.
+* `php artisan make:auth` generates the authentication scaffolding. Creates some routes, templates and layout for authentication.
 * Middleware runs for every request, i.e. CheckForMaintenanceMode. Authentication check is middleware.
 
 ## Lesson 18 - Associating With Users
