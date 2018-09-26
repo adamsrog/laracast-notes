@@ -41,7 +41,7 @@ Route::get('/', function() {
 * Using the data in a view example:
 ```php
 <ul>
-	@foreach $tasks as $task
+	@foreach ($tasks as $task)
 	<li>{{ $task }}</li>
 	@endforeach
 </ul>
@@ -178,7 +178,7 @@ PATCH /posts/{id}
 Delete a post
 DELETE /posts/{id}
 ```
-* `php artisan make:controller PostsControllert -r` will create a "resourceful" controller with boilerplate for the various methods.
+* `php artisan make:controller PostsController -r` will create a "resourceful" controller with boilerplate for the various methods.
 * Laravel protects against Cross-site Request Forgery out of the box. Automatically generates a token for every request. Obfuscates a bunch of security concerns that would otherwise have to be addressed if it weren't handled by the framework.
 * `store()` a post example:
 ```php
@@ -205,13 +205,44 @@ class Post extends Model {
 
 
 ## Lesson 12 - Form Validation 101
-
+* HTML5 provides built in validation to the browser. Older browsers don't support this.
+* Laravel can validate it server-side.
+```php
+public function store() {
+	$this->validate(request(), [
+		'title' => 'required|max:20',
+		'body'  => 'required'
+	]);
+}
+```
+* It will return an array containing the error messages in `$errors`. Array will be empty if there are no errors.
+```html
+@if (count($errors))
+<div class="alert alert-danger">
+	<ul>
+		@foreach ($errors->all() as $error)
+			<li>{{ $error }}</li>
+		@endforeach
+	</ul>
+</div>
+@endif
+```
+* Best to include the error markup as an include and just `@include` it in every view that has validation.
 
 ## Lesson 13 - Rendering Posts
-
+* Creating a view for a post allows you to iterate through an array of them and render them.
+```php
+@foreach ($posts as $post)
+	@include (posts.post)
+@endforeach
+```
+* The `posts.post` view uses the $post variables.
 
 ## Lesson 14 - Laravel Mix and the Front-end
-
+* Asset pipeline allowing for "mixing" of CSS, JS, SCSS, LESS, etc. 
+* Configure this by editing the `webpack.mix.js`
+* Run it by using `npm run dev` (or whatever environment you require, defined in `package.json`).
+* Enable a watcher by using `npm watch dev`
 
 ## Lesson 15 - Eloquent Relationships and Comments
 
