@@ -245,7 +245,19 @@ public function store() {
 * Enable a watcher by using `npm watch dev`
 
 ## Lesson 15 - Eloquent Relationships and Comments
-
+* A comment should belong to a post, so in the Comment migration, add an entry that specifies the post's `id`: `$table->integer('post_id')`.
+* Create a method on the Post model that can grab the comments.
+```php
+public function comments() {
+	return $this->hasMany(Comment::class);
+}
+```
+* Create the inverse on the Comment model
+```php
+public function post() {
+	return $this->belongsTo(Post::class);
+}
+```
 
 ## Lesson 16 - Add Comments
 
