@@ -260,7 +260,33 @@ public function post() {
 ```
 
 ## Lesson 16 - Add Comments
-
+* Create a view with a `textarea` and `button` that allows a user to add a comment. Be sure to include a `{{ csrf_field() }}`, then `POST` it to `/posts/{id}/comment`.
+* Should use the `store` method on the `CommentController`
+```php
+public function store(Post $post) {
+	Comment::create([
+		'body' => request('body'),
+		'post_id' => $post->id
+	]);
+	return back();
+}
+```
+* Alternatively, you could create a method on the `Post` model that would handle adding a comment, i.e. `addComment()`.
+```php
+public function addComment() {
+	Comment::create([
+		'body' => request('body'),
+		'post_id' => $this->id
+	]);
+}
+```
+* Then the `store()` method would be simplified:
+```php
+public function store(Post $post) {
+	$post->addComment(request('body'));
+	return back();
+}
+```
 
 ## Lesson 17 - Rapid Authentication and Configuration
 * `php artisan make:auth` generates the authentication scaffolding. Creates some routes, templates and layout for authentication.
