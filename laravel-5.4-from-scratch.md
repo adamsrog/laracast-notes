@@ -308,10 +308,58 @@ public function user() {
 * 
 
 ## Lesson 20 - Archives
+* Can get specific queries using various methods available from Eloquent.
+```php
+$archives = Post::selectRaw('year(created_at) year, monthname(created_at) month, count(*) published')
+	->groupBy('year', 'month')
+	->orderBy('min(created_at) desc')
+	->get()
+	->toArray();
+```
+* Carbon is useful when dealing with dates. For example, archives example could modify the Post model so it can handle a query scope.
+```php
+use Carbon\Carbon;
 
+public function scopeFilter($query, $filters) {
+	// Use Carbon to turn "May" into month number 5
+	if ($month = $filters['month']) {
+		$query->whereMonth('created_at', Carbon::parse($month)->month);
+	}
+
+	if ($year = $filters['year']) {
+		$query->whereYear('created_at', $year);
+	}
+}
+```
+* In the `PostsController`, it can be filtered now using this syntax. If the Month and Year are present as URL variables, they'll be filtered accordingly.
+```php
+public function index() {
+	$posts = Post::latest()
+		->filter(request(['month', 'year']))
+		->get();
+}
+```
 
 ## Lesson 21 - View Composers
-
+* Since the Archives section in the sidebar is present in every page, this would require running the query to get the `$archives` from lesson 20. View composers is the best way to accomplish this.
+* Move the archives query code to the model.
+```php
+public static function archives() {
+	return static::selectRaw('year(created_at) year, monthname(created_at) month, count(*) published')
+	->groupBy('year', 'month')
+	->orderBy('min(created_at) desc')
+	->get()
+	->toArray();
+}
+```
+* Register a view composer in the `app/Providers/AppServiceProvider.php`.
+```php
+public function boot() {
+	view()->composer('layouts.sidebar', function($view) {
+		$view->with('archives', \App\Post::archives();)
+	});
+}
+```
 
 ## Lesson 22 - Testing 101
 
