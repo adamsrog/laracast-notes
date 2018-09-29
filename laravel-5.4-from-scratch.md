@@ -403,7 +403,27 @@ public function archiveTest() {
 * Use `DatabaseTransactions` so it'll roll back and database entries made during testing. `use DatabaseTransactions;`
 
 ## Lesson 23 - DI, Auto-Resolution, and Repositories
+* Laravel allows you to create repositories that are used in dependency injections and auto-resolution. This is made possible through Laravel's service container. For example, `app/Repositories/Posts.php`:
+```php
+<?php
 
+namespace App\Repositories;
+use App\Post;
+
+class Posts {
+	public function all() {
+		return Post::all();
+	}
+}
+```
+* Inject them into a controller like so:
+```php
+use App\Repositories\Posts;
+
+public function index(Posts $posts) {
+
+}
+```
 
 ## Lesson 24 - The Service Container
 
