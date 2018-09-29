@@ -362,7 +362,45 @@ public function boot() {
 ```
 
 ## Lesson 22 - Testing 101
+* Laravel has `phpunit` installed by default. Can run individual tests by using command `phpunit tests/Feature/ExampleTest.php`.
+```php
+public function testBasicTest() {
+	// load homepage and check for text "My Blog"
+	$this->get('/')->assertSee('My Blog');
+}
+```
+* Look into Laravel Desk for more testing, including Javascript.
+* Good way to think about testing is: Given, When, Then.
+```php
+use App\Post;
 
+public function archiveTest() {
+	// Given I have two records in the database that are posts
+	// and each one is posted a month apart.
+	$first = factory(Post::class)->create();
+	$second = factory(Post::class)->create([
+		'created_at' => \Carbon\Carbon::now()->subMonth()
+	]);
+
+	// When I fetch the archives
+	$posts = Post::archives();
+
+	// Then the response should be in the proper format
+	$this->assertCount(2, $posts);
+	$this->assertEquals([
+		"year" => $first->created_at->format('Y'),
+		"month" => $first->created_at->format('F'),
+		"published" => 1
+	],
+	[
+		"year" => $second->created_at->format('Y'),
+		"month" => $second->created_at->format('F'),
+		"published" => 1
+	]);
+}
+```
+* Use environment variables to specify a different database for testing purposes. Can be set in `phpunit.xml`: `<env name="DB_DATABASE" value="blog_testing"/>`. Database will need migrations ran on it before it'll work.
+* Use `DatabaseTransactions` so it'll roll back and database entries made during testing. `use DatabaseTransactions;`
 
 ## Lesson 23 - DI, Auto-Resolution, and Repositories
 
