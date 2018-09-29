@@ -464,7 +464,30 @@ App\Package\PackageServiceProvider::class
 * `php artisan make:provider` to create a new provider.
 
 ## Lesson 26 - Sending Email
+* Mail drivers are configured in the `app/config/mail.php`. Supports many mail delivery services out of the box.
+* Get started by generating a new `Mail` class using `php artisan make:mail Welcome`. Any public variable put in this file will be available to the view.
+```php
+use App\User;
+public $user;
+public function __construct(User $user) {
+	$this->user = $user;
+}
+public function build() {
+	return $this->view('emails.welcome');
+}
+```
+* The new email class uses a view to generate the content of the email.
+```php
+// app/resources/views/email/welcome.blade.php
+<h1>Welcome to our site, {{ $user->name }}!</h1>
+```
+* Use the new `Mail` class in a controller like so:
+```php
+use App\Mail\Welcome;
+...
+\Mail::to($user)->send(new Welcome);
 
+```
 
 ## Lesson 27 - Markdown Mail
 
