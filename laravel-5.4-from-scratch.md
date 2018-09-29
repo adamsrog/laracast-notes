@@ -467,6 +467,7 @@ App\Package\PackageServiceProvider::class
 * Mail drivers are configured in the `app/config/mail.php`. Supports many mail delivery services out of the box.
 * Get started by generating a new `Mail` class using `php artisan make:mail Welcome`. Any public variable put in this file will be available to the view.
 ```php
+// app/Emails/Welcome.php
 use App\User;
 public $user;
 public function __construct(User $user) {
@@ -490,7 +491,11 @@ use App\Mail\Welcome;
 ```
 
 ## Lesson 27 - Markdown Mail
-
+* `php artisan make:mail WelcomeAgain --markdown="emails.welcome-again"`
+* Adding the `markdown` flag generates a new view and also uses `markdown()` instead of `view()`.
+* Allows for styled emails using a default theme split into different components.
+* Can customize the theme by executing `php artisan vendor:publish --tag=myapp-mail`. This will copy the views to `app/resources/views/vendor/mail`. Edit these files to manipulate the styling, or anything else.
+* Tell Laravel to use these by editing the `app/config/mail.php`. Change `theme` from `default` to `myapp`.
 
 ## Lesson 28 - Form Requests and Form Objects
 
