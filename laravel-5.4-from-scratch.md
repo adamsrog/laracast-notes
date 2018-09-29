@@ -430,7 +430,7 @@ public function index(Posts $posts) {
 ```php
 // routes/web.php
 App::bind('App\Billing\Stripe', function() {
-	return \App\Billing\Stripe(config(services.STRIPE_API_KEY));
+	return new \App\Billing\Stripe(config(services.stripe.api_key));
 });
 
 $stripe = App::make('App\Billing\Stripe');
@@ -447,7 +447,21 @@ class Stripe {
 * Can also register singleton using `App::singleton('App\Billing\Stripe')`.
 
 ## Lesson 25 - Service Providers Explained
-
+* The Stripe service code put in the `route/web.php` last lesson is better suited for the Providers folder located at `app/Providers`.
+```php
+// app/Providers/AppServiceProvider.php
+use App\Billing\Stripe;
+public function register() {
+	$this->app->singleton(Stripe::class, function() {
+		return new Stripe(config(services.stripe.api_key));
+	});
+}
+```
+* Some packages may instruct you to add a line to the `app/config/app.php` file. This will tell Laravel to register the service.
+```php
+App\Package\PackageServiceProvider::class
+```
+* `php artisan make:provider` to create a new provider.
 
 ## Lesson 26 - Sending Email
 
