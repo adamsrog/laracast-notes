@@ -426,7 +426,25 @@ public function index(Posts $posts) {
 ```
 
 ## Lesson 24 - The Service Container
+* All registered dependencies will be resolved in the service container.
+```php
+// routes/web.php
+App::bind('App\Billing\Stripe', function() {
+	return \App\Billing\Stripe(config(services.STRIPE_API_KEY));
+});
 
+$stripe = App::make('App\Billing\Stripe');
+
+// app/Billing/Stripe.php
+namespace App\Billing;
+
+class Stripe {
+	public function __construct($key) {
+		$this->key = $key;
+	}
+}
+```
+* Can also register singleton using `App::singleton('App\Billing\Stripe')`.
 
 ## Lesson 25 - Service Providers Explained
 
