@@ -538,10 +538,25 @@ public function store(RegistrationRequest $request) {
 	$request->persist();
 	return redirect()->home();
 }
-``
+```
 
 ## Lesson 29 - Session Handling and Flash Messaging
-
+* Good UX to give the user some feedback about something that may have happened in the background (i.e. registration was successful).
+* `session()` allows for persisting data across page loads. `session()->flash()` persists the data only for a single page load.
+```php
+public function store(RegistrationRequest $request) {
+	session()->flash('message', 'Thanks for signing up!');
+	return redirect()->home();
+}
+```
+* Show the message in the view. Style it however you'd like. Can use Javascript to fade out the message too.
+```html
+@if ($flash = session('message'))
+	<div class="alert alert-success" role="alert">
+		{{ $flash }}
+	</div>
+@endif
+```
 
 ## Lesson 30 - Tags and Pivot Tables
 
