@@ -559,7 +559,37 @@ public function store(RegistrationRequest $request) {
 ```
 
 ## Lesson 30 - Tags and Pivot Tables
+* A post should be able to have multiple tags. This can be done by creating a new Model named `tag` and using a pivot table. It's migration would look something like this:
+```php
+public function up() {
+	Schema::create('tags', function(Blueprint $table) {
+		$table->increments('id');
+		$table->string('name')->unique();
+		$table->timestamps();
+	});
 
+	Schema::create('post_tag', function(Blueprint) {
+		$table->integer('post_id');
+		$table->integer('tag_id');
+		$table->primary(['post_id', 'tag_id']);
+	});
+}
+```
+* In the `Post` model:
+```php
+public function tags() {
+	return $this->belongsToMany(Tag::class);
+}
+```
+* And the inverse in the `Tag` model:
+```php
+public function posts() {
+	return $this->belongsToMany(Post::class);
+}
+```
+* To avoid the `n+1` problem (making tons of database queries), Laravel comes ready to "eager load" out of the box. Example syntax: `App\Post::with('tags')->get();`
+* Adding a tag: `$post->tags()->attach($tag);`
+* Removing a tag: `$post->tags()->detach($tag);`
 
 ## Lesson 31 - Sorting Posts By Tags
 
