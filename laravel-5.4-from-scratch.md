@@ -498,7 +498,47 @@ use App\Mail\Welcome;
 * Tell Laravel to use these by editing the `app/config/mail.php`. Change `theme` from `default` to `myapp`.
 
 ## Lesson 28 - Form Requests and Form Objects
+* Create a request using this command: `php artisan make:request RegistrationRequest`.
+* Requests allow you to move logic out of the `Controller` and into it's own file that can be reused.
+```php
+use App\Http\Requests\RegistrationRequest;
 
+public function store(RegistrationRequest $request) {
+	// ...
+}
+```
+* Request file contains `authorize()` and `rules()`.
+```php
+public function authorize() {
+	return true; //anyone can make the request because it is a registration request!
+}
+
+public function rules() {
+	return [
+		'name' => 'required',
+		'email' => 'required|email',
+		'password' => 'required|confirmed'
+	];
+}
+```
+* Nothing in the Controller's `store()` method will execute if the Request's `rules()` validation fails.
+* Can also add additional methods in the Request, for example, `persist()`
+```php
+public function persist() {
+	$user = User::create(
+		$this->only(['name', 'email', 'password'])
+	);
+	auth()->login($user);
+	Mail::to($user)->send(new Welcome($user));
+}
+```
+* This method would then be used from the Controller like so:
+```php
+public function store(RegistrationRequest $request) {
+	$request->persist();
+	return redirect()->home();
+}
+``
 
 ## Lesson 29 - Session Handling and Flash Messaging
 
