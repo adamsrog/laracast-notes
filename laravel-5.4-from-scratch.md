@@ -356,7 +356,7 @@ public static function archives() {
 ```php
 public function boot() {
 	view()->composer('layouts.sidebar', function($view) {
-		$view->with('archives', \App\Post::archives();)
+		$view->with('archives', \App\Post::archives());
 	});
 }
 ```
@@ -592,6 +592,54 @@ public function posts() {
 * Removing a tag: `$post->tags()->detach($tag);`
 
 ## Lesson 31 - Sorting Posts By Tags
+* We want our users to be able to specify the tag name in the URL, rather than it's `id`. For example, `site.dev/posts/tags/personal` instead of `site.dev/posts/tags/1`. To accomplish this, create a new method in the `Tag` model to tell Laravel how to handle it.
+```php
+public function getRouteKeyName() {
+	return 'name';
+}
+```
+* Since you'll probably be doing various actions with tags, it makes sense to create a new controller to handle all the actions.
+```php
+use App\Tag;
 
+class TagsController extends Controller {
+	public function index(Tag $tag) {
+		$posts = $tag->posts;
+		return view('posts.index', compact('posts'));
+	}
+}
+```
+* Back from lesson 21, you could list out all the tags in the side bar using the view composers.
+* Register a view composer in the `app/Providers/AppServiceProvider.php`.
+```php
+public function boot() {
+	view()->composer('layouts.sidebar', function($view) {
+		$archives = \App\Post::archives();
+		$tags = \App\Tag::has('posts')->pluck('name');
+		$view->with(compact('archives', 'tags'));
+	});
+}
+```
 
 ## Lesson 32 - Eventing
+* Think of an event as a significant thing in your application that took place: user registered, order was completed, post was created, etc. "When this happens, I need to do A, B and C".
+* `php artisan make:event` to create a new event class.
+* `php artisan make:listener` to create a new listener class. This is what responds to an event. Can also use `--event` to specify the event. For example `php artisan make:listener SendNotification --event="SomeEvent"`.
+* Alternatively you could edit the `app\Providers\EventServiceProvider.php` file and add stuff to `$listen`, then run `php artisan event:generate`
+```php
+protected $listen = [
+	'App\Events\ThreadCreated' => [
+		'App\Listeners\NotifySubscribers',
+	],
+];
+```
+* Put whatever you want done in the `handle()` method in the `Listener` class.
+```php
+public function handle(ThreadCreated $event) {
+	// do something
+}
+```
+* Can simulate an event triggering using `php artisan tinker`.
+	- `event(new App\Events\ThreadCreated(['name' => "Some new thread"]));`
+* Sending an event throuhg a queue will prevent it from holding up the process, i.e. sending an email. This can be done by implementing `ShouldQueue`:
+	- `class NotifySubscribers implements ShouldQueue`
