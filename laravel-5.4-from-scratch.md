@@ -231,7 +231,7 @@ public function store() {
 
 ## Lesson 13 - Rendering Posts
 * Creating a view for a post allows you to iterate through an array of them and render them.
-```php
+```html
 @foreach ($posts as $post)
 	@include (posts.post)
 @endforeach
