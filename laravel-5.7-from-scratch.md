@@ -22,3 +22,74 @@ Route::get('/', function() {
 	return view('welcome');
 });
 ```
+
+# Lesson 4 - Blade Layout Files
+* Specify a section in a layout using `@yield('content')`
+* Extend the layout in a view:
+```
+@extends('layout.app')
+
+@section('content')
+
+@endsection
+```
+* Another example of a section is one for the title of the page.
+```
+<title>@yield('title')</title>
+```
+
+# Lesson 5 - Sending Data to Your Views
+* Passing data through a route example:
+```php
+Route::get('/', function() {
+    $name = 'Roger';
+    $age = 32;
+    $tasks = ['task 1', 'task 2', 'task 3'];
+    return view('welcome', compact('name', 'age', 'tasks'));
+});
+```
+* Using the data in a view example:
+```php
+<ul>
+    @foreach ($tasks as $task)
+    <li>{{ $task }}</li>
+    @endforeach
+</ul>
+```
+* Can get stuff from query strings too. For example, `localhost:8000/?title=test` would pass this into the route.
+```php
+Route::get('/', function() {
+    $title = request('title');
+    return view('welcome', ['title' => $title])
+})
+```
+* Mustache syntax `{{ $foo }}` escapes characters to protect, i.e. you can't pass in `<script>alert('WHOA');</script>`, it'll use escape codes to actually display that rather than actually injecting the script code.
+* Blade can unescape by using `{!! $foo !!}`.
+* Laravel has magic methods for passing data into the views from the route using `->withXXX()`:
+```php
+Route::get('/', function() {
+    $title = request('title');
+    $foo = 'foo';
+    return view('welcome')->withTitle($title)->withFoo($foo)->withBar('bar');
+})
+```
+
+# Lesson 6 - Controllers 101
+* Controllers are the "middle-man" between a route and view. Keeps the route file cleaner, especially for big projects.
+* `php artisan make:controller AdminsController` to create a new controller.
+* In the resulting controller file, you create new methods that will be called from a route:
+```php
+public function index() {
+    $admins = Admin::all();
+    return view('admins', compact('admins'));
+}
+public function show($id) {
+    $admin = Admin::find($id);
+    return view('admin.show', compact('admin'));
+}
+```
+* Example of calling a controller for a route:
+```php
+Route::get('/admins', 'AdminsController@index');
+Route::get('/admins/{$id}', 'AdminsController@show');
+```
