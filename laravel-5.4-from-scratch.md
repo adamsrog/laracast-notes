@@ -34,7 +34,7 @@ Route::get('/', function() {
 Route::get('/', function() {
 	$name = 'Roger';
 	$age = 32;
-	$tasks ['task 1', 'task 2', 'task 3'];
+	$tasks = ['task 1', 'task 2', 'task 3'];
 	return view('welcome', compact('name', 'age', 'tasks'));
 });
 ```
