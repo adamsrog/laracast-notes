@@ -111,10 +111,39 @@ public function show($id) {
 * Also a `@cannot` helper too.
 
 ## Lesson 14 - ACL in Laravel: Part 2 (Policy Objects)
+* Instead of using the `Gate` for ACL, you can define a policy.
+  - `php artisan make:policy PostPolicy`
+```php
+use App\User;
+use App\Post;
 
+class PostPolicy {
+  public function update(User $user, Post $post) {
+    return $user->owns($post);
+  }
+}
+```
+* The policies must be registered in the `app/Providers/AuthServiceProvider.php`
+```php
+protected $policies = [
+  \App\Post::class => \App\Policies\PostPolicy::class
+];
+```
+* The policy can be used in the Controller like so:
+```php
+public function show($id) {
+  $post = Post::findOrFail($id);
+
+  if (Gate::denies('update', $post)) {
+    abort(403, 'Nope.');
+  }
+
+  return view('posts.show', compact('post'));
+}
+```
 
 ## Lesson 15 - ACL in Laravel: Part 3 (Behind the Scenes)
-
+* Deep dive of the underlying source code.
 
 ## Lesson 16 - ACL in Laravel: Roles and Permissions
 
