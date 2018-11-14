@@ -93,3 +93,78 @@ public function show($id) {
 Route::get('/admins', 'AdminsController@index');
 Route::get('/admins/{$id}', 'AdminsController@show');
 ```
+
+# Lesson 7 - Databases and Migrations
+* Configuration is stored in the `.env` file. Adjust the `DB_*` variables to tell Laravel how to use the database.
+* Can use anything you'd like to manage the database: terminal, PHPMyAdmin, Sequel Pro, etc.
+* Migrations are like version control for your database tables. They're PHP classes.
+* `php artisan migrate` will execute the migrations and set up the schema for the database tables.
+* `php artisan migrate:rollback` will roll back the migration.
+* `php artisan migrate:fresh` drops all tables, and re-runs them entirely from scratch.
+* `php artisan make:migration create_projects_table` creates a new migration file for a `projects` table.
+* Migrations contain an `up()` and `down()` method. Migrating will use `up` and rollback will use `down()` to drop the tables.
+
+# Lesson 8 - Eloquent, Namespacing, and MVC
+
+
+
+# Lesson 9 - Directory Structure Review
+
+
+# Lesson 10 - Form Handling and CSRF Protection
+
+
+# Lesson 11 - Routing Conventions Worth Following
+
+
+# Lesson 12 - Faking PATCH and DELETE Requests
+
+
+# Lesson 13 - Form Delete Requests
+
+
+# Lesson 14 - Cleaner Controllers and Mass Assignment Concerns
+
+
+# Lesson 15 - Two Layers of Validation
+
+
+# Lesson 16 - Your First Eloquent Relationships
+
+
+# Lesson 17 - Form Action Considerations
+
+
+# Lesson 18 - Create New Project Tasks
+
+
+# Lesson 19 - Better Encapsulation
+
+
+# Lesson 20 - When in Doubt
+
+
+# Lesson 21 - Core Concepts: Service Container and Auto-Resolution
+
+
+# Lesson 22 - Core Concepts: Service Providers
+
+
+# Lesson 23 - Core Concepts: Configuration and Environments
+
+
+# Lesson 24 - A Full Registration System in Seconds
+
+
+# Lesson 25 - Core Concepts: Middleware
+
+
+# Lesson 26 - You May Only View Your Projects
+
+
+# Lesson 27 - Authorization Essentials
+
+
+# Lesson 28 - Simpler Debugging With Laravel Telescope
+
+
